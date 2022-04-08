@@ -1,5 +1,7 @@
 const apiResponseHandler = require('../helper/ApiResponse.ts')
-const db = require('../models/index');
+const db = require('../models/index')
+const jwt = require('jsonwebtoken')
+
 
 class HomeController {
 
@@ -7,7 +9,7 @@ class HomeController {
         try {
             const data = "test user API";
             const message = "user test API is Working";
-            apiResponseHandler.send(req, res, "DATA", data, message)
+            apiResponseHandler.send(req, res, "data", data, message)
         } catch (error) {
             next(error);
         }
@@ -16,7 +18,11 @@ class HomeController {
         console.log(db.sequelize.config)
         const data = db.sequelize.config
         const message = "Database connection is done";
-        apiResponseHandler.send(req, res, "DATA", data, message)
+        apiResponseHandler.send(req, res, "data", data, message)
+    }
+    static async authenticateToken(req, res, next) {
+        let data = req.user
+        apiResponseHandler.send(req, res, "data", data, "Welcome 🙌 ");
     }
 }
 

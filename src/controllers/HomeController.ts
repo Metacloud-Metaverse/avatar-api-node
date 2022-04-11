@@ -22,7 +22,7 @@ class HomeController {
     }
     static async authenticateToken(req, res, next) {
         let data = req.user
-        apiResponseHandler.send(req, res, "data", data, "Welcome 🙌 ");
+        apiResponseHandler.send(req, res, "data", data, "Welcome  🙌 ");
     }
 }
 

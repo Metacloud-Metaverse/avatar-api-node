@@ -10,21 +10,18 @@ class AvatarController{
             const data = req.body;
             if (data.user_id == null || data.user_id == "" || data.data == null || data.data == "") {
                 isError = true
-                const err ="error"
                 const message = "Required field is/are empty or null";
-                ApiResponseHandler.sendError(req, res, "data", err, message)
+                ApiResponseHandler.sendError(req, res, "data", null, message)
             } else if (typeof data.user_id !== "number") {
-                const err = "error"
                 const message = "Datatype does't match for user_id, integer expected";
                 isError = true
-                ApiResponseHandler.sendError(req, res, "data", err, message)
+                ApiResponseHandler.sendError(req, res, "data", null, message)
             } else {
                 let isUserExist = await AvatarController.userExist(data.user_id)
                     if (!isUserExist) {
                         isError = true
-                        const err = "error"
                         const message = "user does not exist";
-                        ApiResponseHandler.sendError(req, res, "data", err, message)
+                        ApiResponseHandler.sendError(req, res, "data", null, message)
                     }
             }
             if (!isError) {
@@ -37,19 +34,16 @@ class AvatarController{
                     if(updateAvtar)
                         ApiResponseHandler.send(req, res, "data", data, "Avatart updated successfully")
                     else{
-                        const err = "error"
                         const message = "error updating avatar";
-                        ApiResponseHandler.sendError(req, res, "data", err, message)
+                        ApiResponseHandler.sendError(req, res, "data", null, message)
                     }
 
                 }
             }
         }
         catch (error) {
-            next(error);
-            const err = "error"
             const message = "error saving an avatar";
-            ApiResponseHandler.sendError(req, res, "data", err, message)
+            ApiResponseHandler.sendError(req, res, "data", null, message)
         }
     }
     static async fetchAvatar(req, res, next) {
@@ -57,18 +51,15 @@ class AvatarController{
             const user_id = req.params.user_id
             let isAvatarExist = await AvatarController.avatarExist(user_id)
                 if (!isAvatarExist) {
-                    const err = "No Data"
                     const message = "Avatar not available ";
-                    ApiResponseHandler.sendError(req, res, "data", err, message)
+                    ApiResponseHandler.sendError(req, res, "data", null, message)
                 } else {
                     const data = isAvatarExist
                     ApiResponseHandler.send(req, res, "data", data, "Avatart fetched successfully")
                 }
             } catch(error) {
-                next(error);
-                const err = "error"
                 const message = "error fetching avatar";
-                ApiResponseHandler.sendError(req, res, "data", err, message)
+                ApiResponseHandler.sendError(req, res, "data", null, message)
             }
     }
     static async userExist(id){

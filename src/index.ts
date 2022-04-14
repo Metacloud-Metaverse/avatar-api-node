@@ -1,4 +1,5 @@
 const env = require('dotenv').config()
+const compression = require("compression")
 const express = require('express')
 const ApiRoutes = require('./routes/app.ts')
 
@@ -8,6 +9,6 @@ const app = express()
 app.use(express.json())
 app.use('/api', ApiRoutes)
 
-    app.listen(port, () =>
-    console.log(`Listening on ws://localhost:${port}`)
+app.listen(port, () =>
+    console.log(`Listening on http://localhost:${port}`)
 );

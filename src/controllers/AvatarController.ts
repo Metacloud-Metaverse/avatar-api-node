@@ -5,7 +5,7 @@ const ApiResponseHandler = require('../helper/ApiResponse.ts')
 let isError = false;
 
 class AvatarController{
-    static async saveAvatar(req, res, next) {
+    static saveAvatar(req, res, next) {
         try {
             const data = req.body;
             if (data.user_id == null || data.user_id == "" || data.data == null || data.data == "") {
@@ -17,7 +17,7 @@ class AvatarController{
                 isError = true
                 ApiResponseHandler.sendError(req, res, "data", null, message)
             } else {
-                let isUserExist = await AvatarController.userExist(data.user_id)
+                let isUserExist = AvatarController.userExist(data.user_id)
                     if (!isUserExist) {
                         isError = true
                         const message = "user does not exist";
@@ -25,12 +25,12 @@ class AvatarController{
                     }
             }
             if (!isError) {
-                let isAvatarExist = await AvatarController.avatarExist(data.user_id)
+                let isAvatarExist = AvatarController.avatarExist(data.user_id)
                 if (!isAvatarExist) {
-                    await avatarModel.create(data);
+                    avatarModel.create(data);
                     ApiResponseHandler.send(req, res, "data", data, "Avatart saved successfully")
                 } else {
-                    let updateAvtar = await AvatarController.updateAvatar(data.user_id, data)
+                    let updateAvtar = AvatarController.updateAvatar(data.user_id, data)
                     if(updateAvtar)
                         ApiResponseHandler.send(req, res, "data", data, "Avatart updated successfully")
                     else{

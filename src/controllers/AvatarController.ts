@@ -2,43 +2,38 @@ const db = require('../models/index.js');
 const userModel = db.User;
 const avatarModel = db.Avatar;
 const ApiResponseHandler = require('../helper/ApiResponse.ts')
-let isError = false;
 
 class AvatarController{
-    static saveAvatar(req, res, next) {
+    static async saveAvatar(req, res, next) {
         try {
             const data = req.body;
             if (data.user_id == null || data.user_id == "" || data.data == null || data.data == "") {
-                isError = true
                 const message = "Required field is/are empty or null";
                 ApiResponseHandler.sendError(req, res, "data", null, message)
             } else if (typeof data.user_id !== "number") {
                 const message = "Datatype does't match for user_id, integer expected";
-                isError = true
                 ApiResponseHandler.sendError(req, res, "data", null, message)
             } else {
-                let isUserExist = AvatarController.userExist(data.user_id)
+                let isUserExist = await AvatarController.userExist(data.user_id)
                     if (!isUserExist) {
-                        isError = true
                         const message = "user does not exist";
                         ApiResponseHandler.sendError(req, res, "data", null, message)
-                    }
-            }
-            if (!isError) {
-                let isAvatarExist = AvatarController.avatarExist(data.user_id)
-                if (!isAvatarExist) {
-                    avatarModel.create(data);
-                    ApiResponseHandler.send(req, res, "data", data, "Avatart saved successfully")
-                } else {
-                    let updateAvtar = AvatarController.updateAvatar(data.user_id, data)
-                    if(updateAvtar)
-                        ApiResponseHandler.send(req, res, "data", data, "Avatart updated successfully")
-                    else{
-                        const message = "error updating avatar";
-                        ApiResponseHandler.sendError(req, res, "data", null, message)
-                    }
+                    }else{
+                        let isAvatarExist = await AvatarController.avatarExist(data.user_id)
+                        if (!isAvatarExist) {
+                            avatarModel.create(data);
+                            ApiResponseHandler.send(req, res, "data", data, "Avatart saved successfully")
+                        } else {
+                            let updateAvtar = await AvatarController.updateAvatar(data.user_id, data)
+                            if (updateAvtar)
+                                ApiResponseHandler.send(req, res, "data", data, "Avatart updated successfully")
+                            else {
+                                const message = "error updating avatar";
+                                ApiResponseHandler.sendError(req, res, "data", null, message)
+                            }
 
-                }
+                        }
+                    }
             }
         }
         catch (error) {

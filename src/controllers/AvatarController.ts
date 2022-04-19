@@ -4,7 +4,7 @@ const avatarModel = db.Avatar;
 const apiResponseHandler = require('../helper/ApiResponse.ts')
 
 class AvatarController{
-    static async saveAvatar(req: any, res: any, next: any) {
+    static async saveAvatar(req, res, next) {
         try {
             const data = req.body;
             if (data.user_id == null || data.user_id == "" || data.data == null || data.data == "") {
@@ -41,7 +41,7 @@ class AvatarController{
             apiResponseHandler.sendError(req, res, "data", null, message)
         }
     }
-    static async fetchAvatar(req: any, res: any, next: any) {
+    static async fetchAvatar(req, res, next) {
         try {
             const user_id = req.params.user_id
             let isAvatarExist = await AvatarController.avatarExist(user_id)
@@ -57,13 +57,13 @@ class AvatarController{
                 apiResponseHandler.sendError(req, res, "data", null, message)
             }
     }
-    static async userExist(id: number){
+    static async userExist(id){
         return userModel.findOne({ where: { id: id } })
     }
-    static async avatarExist(user_id: number){
+    static async avatarExist(user_id){
         return avatarModel.findOne({ where: { user_id: user_id } })
     }
-    static async updateAvatar(user_id: number, data: any) {
+    static async updateAvatar(user_id, data) {
         return avatarModel.update(data, { where: { user_id: user_id } })
     }
 }
